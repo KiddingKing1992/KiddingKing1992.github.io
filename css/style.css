@@ -1,0 +1,1582 @@
+/* 基础重置和全局样式 */
+:root {
+    /* 缩放比例变量 */
+    --scale-130: 1.3;
+    --scale-150: 1.5;
+    
+    /* 基础尺寸 */
+    --base-padding: 30px;
+    --base-margin: 20px;
+    --base-border-radius: 25px;
+    --base-font-size: 14px;
+    
+    /* 计算后的尺寸 */
+    --padding-lg: calc(var(--base-padding) * var(--scale-130)); /* 39px */
+    --margin-lg: calc(var(--base-margin) * var(--scale-130)); /* 26px */
+    --border-radius-lg: calc(var(--base-border-radius) * var(--scale-130)); /* 33px */
+    --font-size-lg: calc(var(--base-font-size) * var(--scale-130)); /* 18px */
+    
+    /* 科技字体栈 */
+    --font-tech: 'Consolas', 'Monaco', 'Microsoft YaHei', '微软雅黑', monospace;
+    --font-main: 'PingFang SC', 'Microsoft YaHei', '微软雅黑', 'Hiragino Sans GB', sans-serif;
+    
+    /* 科幻色彩 */
+    --color-primary: #00ff00;
+    --color-shadow: rgba(0, 255, 0, 0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    overflow: hidden; /* 防止滚动条 */
+    background-color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+/* 隐藏类 */
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 主视口容器 - 固定1920x1080尺寸，通过JS动态缩放 */
+.main-viewport {
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+    /* transform 将通过JS动态设置 */
+    background-color: #000;
+}
+
+/* 页面容器 - 改为在固定视口内的绝对定位 */
+.page-container {
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* 音效选择界面样式 */
+.audio-choice-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    background: #000000; /* 纯黑背景 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 选择内容容器 */
+.choice-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1080px;
+    perspective: 1000px; /* 3D透视效果 */
+    position: relative;  /* 为传送枪的绝对定位提供参考 */
+}
+
+/* 传送枪容器 - 装饰性UI */
+.portal-gun-container {
+    position: absolute;  /* 改为绝对定位 */
+    top: 60%;           /* 垂直居中 */
+    left: 90%;          /* 水平居中 */
+    transform: translate(-50%, -50%); /* 居中对齐 */
+    z-index: 2000;      /* 提升到最高层级，确保在所有元素之上 */
+    /* 移除 cursor: pointer，不再可点击 */
+    
+    /* 微弱漂浮动画 */
+    animation: float-gentle 4s ease-in-out infinite;
+}
+
+/* 传送枪枪体样式 */
+.gun-body {
+    max-width: 400px;     /* 增大枪体宽度 */
+    max-height: 400px;    /* 增大枪体高度 */
+    width: auto;          /* 自动宽度保持比例 */
+    height: auto;         /* 自动高度保持比例 */
+}
+
+/* 传送液样式 */
+.portal-liquid {
+    position: absolute;   /* 绝对定位，相对于枪体容器 */
+    top: 50%;            /* 距离容器顶部50%的位置 */
+    left: 50%;           /* 距离容器左侧50%的位置 */
+    transform: translate(-50%, -50%); /* 居中对齐 */
+    max-width: 400px;    /* 增大传送液宽度 */
+    max-height: 400px;   /* 增大传送液高度 */
+    width: auto;         /* 自动宽度保持比例 */
+    height: auto;        /* 自动高度保持比例 */
+    z-index: 2;          /* 确保传送液在枪体上方 */
+    
+    /* 绿光呼吸灯效果 */
+    filter: drop-shadow(0 0 10px var(--color-primary));
+    animation: portal-breathing 3s ease-in-out infinite;
+}
+
+/* 通用全屏容器基础样式 */
+.fullscreen-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 1;
+}
+
+/* 通用全屏图片样式 */
+.fullscreen-image {
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover;
+}
+
+/* 宇宙背景容器 */
+.background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 1;
+}
+
+/* 宇宙背景图片 */
+.background-image {
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover; /* 保持比例填充整个容器 */
+}
+
+/* 定帧背景容器 */
+.freeze-frame-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 1;
+}
+
+/* 定帧背景图片 */
+.freeze-frame-image {
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover; /* 保持比例填充整个容器 */
+}
+
+/* 帷幕效果 */
+.curtain-top, .curtain-bottom {
+    position: absolute;
+    left: 0;
+    width: 1920px;
+    height: 540px; /* 50% of 1080px = 540px */
+    background-color: #000;
+    z-index: 10;
+}
+
+.curtain-top {
+    top: 0;
+}
+
+.curtain-bottom {
+    bottom: 0;
+}
+
+/* 传送门容器 */
+.portal-container {
+    position: absolute;
+    top: 540px;    /* 垂直居中：1080px的50% */
+    left: 960px;   /* 水平居中：1920px的50% */
+    transform: translate(-50%, -50%) scale(0); /* 居中对齐 + 初始隐藏 */
+    z-index: 2;
+    cursor: pointer;
+}
+
+/* 传送门容器显示后的漂浮动画 */
+.portal-container.floating {
+    animation: float-portal 6s ease-in-out infinite;
+}
+
+/* 传送门图片 */
+.portal-image {
+    max-width: 900px;
+    max-height: 900px;
+    width: auto;
+    height: auto;
+}
+
+/* 传送门悬停效果 */
+.portal-container:hover:not(.floating) {
+    transform: scale(1.1); /* 只在没有漂浮动画时应用悬停缩放 */
+}
+
+/* 引导文字 */
+.guide-text {
+    position: absolute;
+    bottom: 400px;      /* 40% of 1080px = 432px */
+    left: 1450px;       /* 68% of 1920px = 1305.6px ≈ 1305px */
+    transform: translateX(-50%);
+    z-index: 3;
+    text-align: center;
+}
+
+.guide-text p {
+    color: #ffffff;
+    font-size: 34px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    animation: pulse 2s infinite;
+    writing-mode: vertical-rl; /* 竖版排版 */
+    text-orientation: upright; /* 文字直立 */
+    letter-spacing: 8px; /* 增加字间距 */
+}
+
+/* 过渡引导文字 - 横版样式 */
+.transition-guide-text {
+    position: absolute;
+    bottom: 100px;      /* 距离底部200px */
+    left: 1110px;        /* 水平居中：1920px的50% */
+    transform: translateX(-50%);
+    z-index: 3;
+    text-align: center;
+}
+
+.transition-guide-text p {
+    color: #ffffff;
+    font-size: 48px;    /* 比竖版文字更大 */
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    animation: pulse 2s infinite;
+    /* 横版排版 - 移除竖版相关样式 */
+    writing-mode: horizontal-tb; /* 横版排版 */
+    text-orientation: mixed;     /* 文字正常方向 */
+    letter-spacing: 12px;        /* 横版字间距 */
+}
+
+/* 黑幕报幕层 */
+.blackscreen-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    background: #000000;
+    z-index: 50;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    /* 移除transition，由GSAP控制动画 */
+}
+
+.blackscreen-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.blackscreen-text {
+    color: #ffffff;
+    font-size: 48px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 8px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* 文字脉冲动画 */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.8;
+        transform: translateX(-50%) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.05);
+    }
+}
+
+/* 淡出黑屏效果 */
+.fade-black {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    background-color: black;
+    z-index: 9999;
+    opacity: 0;
+}
+
+/* 假三维控制面板 */
+.control-panel {
+    width: 650px; /* 500px * 1.3 = 650px */
+    height: 455px; /* 350px * 1.3 = 455px */
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+    border-radius: 33px; /* 25px * 1.3 = 33px */
+    box-shadow: 
+        33px 33px 65px rgba(0, 0, 0, 0.8), /* 25*1.3, 25*1.3, 50*1.3 */
+        -16px -16px 33px rgba(255, 255, 255, 0.05), /* 12*1.3, 12*1.3, 25*1.3 */
+        inset 4px 4px 8px rgba(255, 255, 255, 0.1), /* 3*1.3, 3*1.3, 6*1.3 */
+        inset -4px -4px 8px rgba(0, 0, 0, 0.5); /* 3*1.3, 3*1.3, 6*1.3 */
+    transform: rotateX(10deg) rotateY(-5deg);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    z-index: 10;
+    position: relative;
+    
+    /* 微弱漂浮动画 */
+    animation: float-panel 5s ease-in-out infinite;
+}
+
+/* 控制面板头部 */
+.panel-header {
+    background: linear-gradient(145deg, #333, #222);
+    padding: 20px 26px; /* 15px*1.3, 20px*1.3 */
+    border-radius: 33px 33px 0 0; /* 25px*1.3 */
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 15px*1.3 */
+    border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* 头部指示灯 */
+.header-light {
+    width: 16px; /* 12px*1.3 */
+    height: 16px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    box-shadow: 
+        0 0 13px var(--color-primary), /* 10px*1.3 */
+        0 0 26px var(--color-primary), /* 20px*1.3 */
+        inset 3px 3px 5px rgba(255, 255, 255, 0.3); /* 2px*1.3, 2px*1.3, 4px*1.3 */
+    animation: pulse-light 2s infinite;
+}
+
+/* 头部标题 */
+.panel-header span {
+    color: var(--color-primary);
+    font-family: var(--font-tech);
+    font-size: var(--font-size-lg); /* 18px */
+    font-weight: bold;
+    text-shadow: 0 0 5px var(--color-primary);
+}
+
+/* 控制面板主体 */
+.panel-body {
+    padding: var(--padding-lg); /* 39px */
+}
+
+/* 控制区域 */
+.control-section {
+    margin-bottom: var(--padding-lg); /* 39px */
+}
+
+/* 加载阶段和音频选择阶段 - 绝对定位，完全重叠 */
+#video-consent-section,
+#loading-progress-section,
+#audio-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: var(--padding-lg); /* 39px */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* 面板主体设置为相对定位，为绝对定位的子元素提供参考 */
+.panel-body {
+    position: relative;
+    padding: 0; /* 移除padding，因为子元素自己有padding */
+    height: 375px; /* 455px - 80px(header) = 375px，确保有固定高度 */
+}
+
+/* 标签文字 */
+.label {
+    color: #888;
+    font-family: var(--font-tech);
+    font-size: calc(var(--base-font-size) * var(--scale-130) + 2px); /* 20px */
+    margin-bottom: 13px; /* 10px*1.3 */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 状态显示屏 */
+.status-display {
+    background: #000;
+    border-radius: 10px; /* 8px*1.3 */
+    padding: 20px; /* 15px*1.3 */
+    box-shadow: 
+        inset 5px 5px 10px rgba(0, 0, 0, 0.8), /* 4px*1.3, 4px*1.3, 8px*1.3 */
+        inset -3px -3px 5px rgba(255, 255, 255, 0.05); /* 2px*1.3, 2px*1.3, 4px*1.3 */
+    border: 1px solid #333;
+}
+
+/* 显示屏内容 */
+.screen {
+    position: relative;
+    color: var(--color-primary);
+    font-family: var(--font-tech);
+    font-size: calc(var(--base-font-size) * var(--scale-130) * 2); /* 30px */
+    text-align: center;
+    height: 39px; /* 30px*1.3 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 扫描线动画 */
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px; /* 2px*1.3 */
+    background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+    animation: scan 2s linear infinite;
+}
+
+/* 显示屏文字 */
+.text {
+    text-shadow: 0 0 5px var(--color-primary);
+}
+
+/* 按钮区域 */
+.button-section {
+    display: flex;
+    gap: var(--margin-lg); /* 26px */
+    justify-content: center;
+}
+
+/* 单按钮居中 */
+.button-section.single-button {
+    justify-content: center;
+}
+
+.button-section.single-button .control-btn {
+    width: 200px;
+}
+
+/* 进度条容器 */
+.progress-container {
+    margin-top: var(--margin-lg); /* 26px */
+    width: 100%;
+}
+
+/* 进度条外框 */
+.progress-bar {
+    width: 100%;
+    height: 26px; /* 20px*1.3 */
+    background: #000;
+    border-radius: 13px; /* 10px*1.3 */
+    border: 1px solid #333;
+    box-shadow: 
+        inset 3px 3px 7px rgba(0, 0, 0, 0.8), /* 2px*1.3, 2px*1.3, 5px*1.3 */
+        inset -2px -2px 4px rgba(255, 255, 255, 0.05); /* 1px*1.3, 1px*1.3, 3px*1.3 */
+    overflow: hidden;
+    position: relative;
+}
+
+/* 进度条填充 */
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), #27ff27, var(--color-primary));
+    border-radius: 13px; /* 10px*1.3 */
+    transition: width 0.3s ease;
+    box-shadow: 
+        0 0 13px var(--color-shadow), /* 10px*1.3 */
+        inset 0 3px 7px rgba(255, 255, 255, 0.2); /* 2px*1.3, 5px*1.3 */
+    position: relative;
+}
+
+/* 进度条光效动画 */
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progress-shine 2s infinite;
+}
+
+/* 进度信息 */
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 13px; /* 10px*1.3 */
+    font-family: var(--font-tech);
+    font-size: var(--font-size-lg); /* 18px */
+    color: var(--color-primary);
+}
+
+#progress-percent {
+    font-weight: bold;
+    text-shadow: 0 0 5px var(--color-primary);
+}
+
+#progress-detail {
+    font-size: 16px; /* 12px*1.3 */
+    color: #888;
+    opacity: 0.8;
+}
+
+/* 控制按钮 */
+.control-btn {
+    width: 182px; /* 140px*1.3 */
+    height: 91px; /* 70px*1.3 */
+    background: linear-gradient(145deg, #444, #222);
+    border: none;
+    border-radius: 20px; /* 15px*1.3 */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 
+        13px 13px 26px rgba(0, 0, 0, 0.6), /* 10px*1.3, 10px*1.3, 20px*1.3 */
+        -7px -7px 13px rgba(255, 255, 255, 0.05); /* 5px*1.3, 5px*1.3, 10px*1.3 */
+    border: 1px solid #555;
+}
+
+/* 按钮悬停效果 */
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        16px 16px 31px rgba(0, 0, 0, 0.8), /* 12px*1.3, 12px*1.3, 24px*1.3 */
+        -7px -7px 13px rgba(255, 255, 255, 0.1); /* 5px*1.3, 5px*1.3, 10px*1.3 */
+}
+
+/* 按钮按下效果 */
+.control-btn:active {
+    transform: translateY(1px);
+    box-shadow: 
+        7px 7px 13px rgba(0, 0, 0, 0.8), /* 5px*1.3, 5px*1.3, 10px*1.3 */
+        inset 4px 4px 8px rgba(0, 0, 0, 0.5); /* 3px*1.3, 3px*1.3, 6px*1.3 */
+}
+
+/* 按钮表面 */
+.btn-face {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 13px; /* 10px*1.3 */
+}
+
+/* 按钮文字 */
+.btn-text {
+    color: #ccc;
+    font-family: var(--font-tech);
+    font-size: calc(var(--base-font-size) * var(--scale-130) + 6px); /* 24px */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 按钮指示灯 */
+.btn-indicator {
+    width: 13px; /* 10px*1.3 */
+    height: 13px;
+    border-radius: 50%;
+    background: #666;
+    transition: all 0.3s ease;
+}
+
+/* 开启按钮悬停时的指示灯 */
+.control-btn.enable:hover .btn-indicator {
+    background: var(--color-primary);
+    box-shadow: 0 0 10px var(--color-primary);
+}
+
+/* 关闭按钮悬停时的指示灯 */
+.control-btn.disable:hover .btn-indicator {
+    background: #ff4444;
+    box-shadow: 0 0 10px #ff4444;
+}
+
+/* 全局音效开关 - 固定在右上角 */
+.global-audio-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.4); /* 降低背景透明度，去除绿色 */
+    border: 1px solid rgba(128, 128, 128, 0.2); /* 改为灰色边框 */
+    border-radius: 45px; /* 30px * 1.5 = 45px */
+    padding: 23px 30px; /* 15px*1.5, 20px*1.5 */
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    min-width: 150px; /* 100px * 1.5 = 150px */
+    min-height: 75px; /* 50px * 1.5 = 75px */
+}
+
+.global-audio-toggle:hover {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(128, 128, 128, 0.4); /* 悬停时稍微明显一些，但保持灰色 */
+    box-shadow: 0 0 10px rgba(128, 128, 128, 0.2); /* 灰色发光效果 */
+}
+
+/* 开关容器 */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 23px; /* 15px * 1.5 = 23px */
+}
+
+/* 开关标签 */
+.toggle-label {
+    color: rgba(255, 255, 255, 0.8); /* 改为白色，降低透明度 */
+    font-family: var(--font-tech);
+    font-size: 24px; /* 16px * 1.5 = 24px */
+    font-weight: bold;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.3); /* 改为白色阴影 */
+    opacity: 0.8; /* 降低透明度，减少显眼 */
+}
+
+/* 开关按钮 */
+.toggle-switch {
+    width: 75px; /* 50px * 1.5 = 75px */
+    height: 39px; /* 26px * 1.5 = 39px */
+    background: #333;
+    border-radius: 39px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #555;
+}
+
+/* 开关滑块 */
+.toggle-slider {
+    width: 30px; /* 20px * 1.5 = 30px */
+    height: 30px;
+    background: #666;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px; /* 2px * 1.5 = 3px */
+    left: 5px; /* 3px * 1.5 = 5px */
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* 开关开启状态 */
+.toggle-switch.active {
+    background: rgba(255, 255, 255, 0.8); /* 改为白色，降低透明度 */
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3); /* 改为白色发光 */
+}
+
+.toggle-switch.active .toggle-slider {
+    left: 39px; /* 26px * 1.5 = 39px */
+    background: #333; /* 改为深色 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 6px rgba(255, 255, 255, 0.4); /* 白色发光 */
+}
+
+/* 开关悬停效果 */
+.toggle-switch:hover {
+    transform: scale(1.05);
+}
+
+/* 第一幕：片头视频页面样式 */
+.video-container {
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* 视频元素样式 */
+#opening-video {
+    width: 1920px;
+    height: 1080px;
+    object-fit: contain; /* 保持视频比例，完整显示 */
+    background: #000;
+}
+
+/* 视频加载状态 */
+#opening-video:not([src]) {
+    background: #000;
+}
+
+/* 视频控制按钮隐藏 */
+#opening-video::-webkit-media-controls,
+#opening-video::-webkit-media-controls-panel,
+#opening-video::-webkit-media-controls-play-button,
+#opening-video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+}
+
+/* 跳过按钮样式 */
+.skip-button {
+    position: absolute;
+    bottom: 60px; /* 40px * 1.5 = 60px */
+    right: 60px;
+    background: rgba(0, 0, 0, 0.5); /* 降低背景透明度 */
+    border: 2px solid rgba(255, 255, 255, 0.2); /* 降低边框透明度 */
+    border-radius: 45px; /* 30px * 1.5 = 45px */
+    padding: 23px 38px; /* 15px*1.5, 25px*1.5 */
+    color: rgba(255, 255, 255, 0.8); /* 降低文字透明度 */
+    font-family: var(--font-tech);
+    font-size: 24px; /* 16px * 1.5 = 24px */
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px; /* 10px * 1.5 = 15px */
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    min-width: 150px; /* 100px * 1.5 = 150px */
+    min-height: 75px; /* 50px * 1.5 = 75px */
+    opacity: 0; /* 默认隐藏 */
+    transform: translateY(20px); /* 初始位置稍微下移 */
+}
+
+.skip-button:hover {
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 1);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* 减少发光效果 */
+}
+
+.skip-button:active {
+    transform: scale(0.95);
+}
+
+.skip-icon {
+    font-size: 27px; /* 18px * 1.5 = 27px */
+    opacity: 0.8;
+}
+
+/* 跳过按钮淡入动画 */
+.skip-button.show {
+    opacity: 1; /* 显示状态 */
+    transform: translateY(0); /* 恢复正常位置 */
+    animation: skipButtonFadeIn 0.5s ease-out forwards;
+}
+
+@keyframes skipButtonFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 动画关键帧 */
+
+/* 传送液呼吸灯动画 */
+@keyframes portal-breathing {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px var(--color-primary)) drop-shadow(0 0 10px var(--color-primary));
+        opacity: 0.8;
+    }
+    50% {
+        filter: drop-shadow(0 0 5px var(--color-primary)) drop-shadow(0 0 10px #27ff27) drop-shadow(0 0 15px #5aff5a);
+        opacity: 1;
+    }
+}
+
+/* 传送枪微弱漂浮动画 */
+@keyframes float-gentle {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-3px) translateX(1px);
+    }
+    50% {
+        transform: translateY(-5px) translateX(-1px);
+    }
+    75% {
+        transform: translateY(-2px) translateX(2px);
+    }
+}
+
+/* 控制面板微弱漂浮动画 */
+@keyframes float-panel {
+    0%, 100% {
+        transform: rotateX(10deg) rotateY(-5deg) translateY(0px);
+    }
+    33% {
+        transform: rotateX(10deg) rotateY(-5deg) translateY(-4px);
+    }
+    66% {
+        transform: rotateX(10deg) rotateY(-5deg) translateY(-2px);
+    }
+}
+
+/* 传送门漂浮动画 */
+@keyframes float-portal {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1) translateY(0px) rotate(0deg);
+    }
+    25% {
+        transform: translate(-50%, -50%) scale(1) translateY(-8px) rotate(1deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1) translateY(-12px) rotate(0deg);
+    }
+    75% {
+        transform: translate(-50%, -50%) scale(1) translateY(-6px) rotate(-1deg);
+    }
+}
+
+/* 指示灯脉冲动画 */
+@keyframes pulse-light {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* 扫描线动画 */
+@keyframes scan {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(39px); } /* 30px*1.3 */
+}
+
+/* 进度条光效动画 */
+@keyframes progress-shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* 强制横屏显示 - 竖屏时旋转内容 */
+@media screen and (orientation: portrait) {
+    /* 竖屏时的特殊处理由JavaScript控制，这里只做基础设置 */
+    body {
+        /* 防止竖屏时出现滚动条 */
+        overflow: hidden;
+    }
+}
+
+/* 移动端安全区域适配 */
+@supports (padding: env(safe-area-inset-top)) {
+    body {
+        /* 考虑刘海屏等安全区域 */
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}
+
+/* 第二幕：搜索神秘人场景样式 - 使用通用全屏样式 */
+/* 注：.search-background-container 和 .search-background-image 
+   可在HTML中添加 fullscreen-container 和 fullscreen-image 类来复用样式，
+   以下保留兼容性定义 */
+.search-background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 1;
+}
+
+.search-background-image {
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover;
+}
+
+/* 可点击区域 - 通用样式 */
+.clickable-area {
+    position: absolute;
+    cursor: pointer;
+    z-index: 20;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.clickable-area:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* 点击提示 */
+.click-hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.8;
+}
+
+/* 横版排版 - 文字在右边 */
+.click-hint.horizontal-hint {
+    flex-direction: row;
+    left: 0;
+    transform: translate(0, -50%);
+    gap: 20px;
+}
+
+.click-hint.horizontal-hint .hint-pulse {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    border-width: 6px;
+}
+
+.click-hint.horizontal-hint .hint-text {
+    white-space: nowrap;
+    font-size: 36px;
+    padding: 16px 32px;
+    border-radius: 40px;
+    border-width: 2px;
+}
+
+/* 放大一倍的提示样式 */
+.clickable-area.large-hint .hint-pulse {
+    width: 120px;
+    height: 120px;
+    border-width: 6px;
+}
+
+.clickable-area.large-hint .hint-text {
+    font-size: 36px;
+    padding: 16px 32px;
+    border-radius: 40px;
+    border-width: 2px;
+}
+
+.hint-pulse {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    animation: pulse-hint 2s infinite;
+}
+
+.hint-text {
+    color: #ffffff;
+    font-family: var(--font-tech);
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #ffffff;
+}
+
+@keyframes pulse-hint {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* 搜索引导文字 */
+.search-guide-text {
+    position: absolute;
+    top: 150px;
+    left: 960px;
+    transform: translateX(-50%);
+    z-index: 3;
+    text-align: center;
+}
+
+.search-guide-text p {
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    animation: pulse 2s infinite;
+    letter-spacing: 4px;
+}
+
+/* 对话系统样式 */
+.dialog-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 1;
+}
+
+.dialog-bg-image {
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover;
+}
+
+.dialog-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+
+/* 道具展示区域 */
+.evidence-display {
+    position: absolute;
+    top: 150px;
+    left: 960px;
+    transform: translateX(-50%);
+    z-index: 10;
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50px);
+    transition: all 0.5s ease;
+}
+
+.evidence-display.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.evidence-container {
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+    border: 2px solid #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 
+        0 0 30px rgba(255, 255, 255, 0.3),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.evidence-img {
+    width: 800px;  /* 增大道具图片 */
+    height: 450px;
+    object-fit: contain;
+    border: 2px solid #555;
+    border-radius: 10px;
+    background: #000;
+    transition: all 0.3s ease;
+}
+
+/* 道具导航 - 隐藏整个导航条 */
+.evidence-navigation {
+    display: none;
+}
+
+/* 隐藏道具左右切换按钮（道具通过对话前进/后退控制） */
+.evidence-nav-btn {
+    display: none;
+}
+
+.evidence-counter {
+    display: none;
+}
+
+/* 人物立绘 */
+.character-portraits {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.character-left, .character-right {
+    position: absolute;
+    bottom: 0;
+    width: 1920px;
+    height: 1080px;
+    transition: all 0.5s ease;
+    opacity: 0;     /* 初始隐藏 */
+    pointer-events: none;
+}
+
+.character-left {
+    left: 100px;
+    transform: translateX(-100px);
+}
+
+.character-right {
+    right: 100px;
+    transform: translateX(100px);
+}
+
+.character-left.active, .character-right.active {
+    opacity: 1;     /* 激活时显示 */
+    transform: translateX(0);
+}
+
+.character-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+}
+
+/* 逆转裁判风格对话框 */
+.dialog-box {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1700px;
+    height: 240px;
+    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+    border: 3px solid #ffffff;
+    border-radius: 15px;
+    box-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.1);
+    z-index: 20;
+    opacity: 0;
+    transform: translateX(-50%) translateY(50px);
+    transition: all 0.5s ease;
+    pointer-events: none; /* 隐藏时禁用点击 */
+}
+
+.dialog-box.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto; /* 显示时启用点击 */
+}
+
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: linear-gradient(145deg, #333, #222);
+    border-radius: 12px 12px 0 0;
+    border-bottom: 2px solid #ffffff;
+}
+
+.speaker-name {
+    color: #ffffff;
+    font-family: var(--font-tech);
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+.dialog-controls {
+    display: flex;
+    gap: 20px;
+}
+
+/* 跳过按钮 - 比左右按钮再宽50% */
+.dialog-btn {
+    background: linear-gradient(145deg, #444, #222);
+    border: 2px solid #555;
+    border-radius: 10px;
+    color: #ccc;
+    font-family: var(--font-tech);
+    font-size: 20px;
+    padding: 12px 48px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dialog-btn:hover {
+    background: linear-gradient(145deg, #555, #333);
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+.dialog-content {
+    padding: 25px;
+    position: relative;
+    height: calc(100% - 70px);
+    display: flex;
+    align-items: center;
+}
+
+.dialog-text {
+    color: #fff;
+    font-family: var(--font-main);
+    font-size: 22px;
+    line-height: 1.6;
+    flex: 1;
+    min-height: 60px;
+}
+
+.dialog-cursor {
+    position: absolute;
+    bottom: 15px;
+    right: 25px;
+    color: #ffffff;
+    font-size: 20px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* 移动端CSS打字机动画 */
+.mobile-typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+    animation: mobile-typing var(--type-duration, 1s) steps(var(--char-count, 20), end) forwards;
+}
+
+@keyframes mobile-typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* 第三幕场景样式 - 使用通用全屏样式 */
+/* 注：可在HTML中添加 fullscreen-container 和 fullscreen-image 类来复用样式 */
+.scene-background-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 1;
+}
+
+.scene-background-image {
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover;
+}
+
+/* 第四幕弹出图片层 */
+.popup-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.popup-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.popup-image {
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover;
+}
+
+/* Rick和Morty看电脑的大图层 */
+.watching-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    z-index: 12;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.watching-overlay.show {
+    opacity: 1;
+}
+
+.watching-image {
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover;
+}
+
+
+/* 开发调试面板样式 */
+.debug-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    max-height: 80vh;
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    z-index: 99999;
+    font-family: var(--font-tech);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    overflow: hidden;
+}
+
+.debug-panel.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.debug-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: linear-gradient(145deg, #333, #222);
+    border-bottom: 1px solid #00ff00;
+    color: #00ff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.debug-hint {
+    font-size: 11px;
+    color: #888;
+    font-weight: normal;
+}
+
+.debug-close {
+    background: none;
+    border: none;
+    color: #ff4444;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+}
+
+.debug-close:hover {
+    color: #ff6666;
+}
+
+.debug-body {
+    padding: 10px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.debug-chapter {
+    margin-bottom: 10px;
+}
+
+.debug-chapter-title {
+    color: #888;
+    font-size: 12px;
+    padding: 5px 0;
+    border-bottom: 1px solid #333;
+    margin-bottom: 8px;
+}
+
+.debug-scene-btn {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+    border: 1px solid #444;
+    border-radius: 5px;
+    color: #ccc;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.debug-scene-btn:hover {
+    background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+    border-color: #00ff00;
+    color: #00ff00;
+}
+
+.debug-scene-btn:active {
+    transform: scale(0.98);
+}
+
+/* 调试面板滚动条样式 */
+.debug-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.debug-body::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.debug-body::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 3px;
+}
+
+.debug-body::-webkit-scrollbar-thumb:hover {
+    background: #00ff00;
+}
+
+/* ========== 系统增强 - 阶段3 UI样式 ========== */
+
+/* 对话导航按钮（回退/前进）- 宽度2倍 */
+.dialog-nav-btn {
+    background: linear-gradient(145deg, #444, #222);
+    border: 2px solid #555;
+    border-radius: 10px;
+    color: #ccc;
+    font-family: var(--font-tech);
+    font-size: 24px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.dialog-nav-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, #555, #333);
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+.dialog-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* 视频控制容器 */
+.video-controls {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    display: flex;
+    gap: 30px;
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.video-controls.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 视频控制按钮 - 增大一倍 */
+.video-ctrl-btn {
+    background: rgba(0, 0, 0, 0.5);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: var(--font-tech);
+    font-size: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.video-ctrl-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+}
+
+.video-ctrl-btn:active {
+    transform: scale(0.95);
+}
+
+/* 倍速按钮特殊样式 */
+.video-ctrl-btn.speed-btn {
+    border-radius: 60px;
+    width: auto;
+    padding: 0 40px;
+    font-size: 36px;
+}
+
+/* 不可跳过提示 Toast */
+.skip-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #ff6b6b;
+    border-radius: 12px;
+    padding: 20px 40px;
+    color: #ff6b6b;
+    font-family: var(--font-tech);
+    font-size: 20px;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+}
+
+.skip-toast.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.skip-toast-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* 对话历史面板（可选功能，暂时隐藏） */
+.dialog-history-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    max-height: 600px;
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid #00ff00;
+    border-radius: 12px;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    display: none; /* 暂时禁用 */
+}
+
+.dialog-history-panel.show {
+    opacity: 1;
+    pointer-events: auto;
+}
