@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 允许屏幕旋转，但内容强制横屏显示 -->
+    <meta name="screen-orientation" content="any">
+    <title>Rick and Morty 简历冒险</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 音效选择界面 -->
+    <div id="audio-choice" class="audio-choice-container">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="global-audio-toggle" class="global-audio-toggle hidden">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="choice-content">
+            <!-- 传送枪容器 - 装饰性UI -->
+            <div class="portal-gun-container">
+                <img id="gun-body" src="assets/ui/portal_gun.png" alt="传送枪枪体" class="gun-body">
+                <img id="portal-liquid" src="assets/ui/portal_fluid.png" alt="传送液" class="portal-liquid">
+            </div>
+            
+            <!-- 假三维音效控制面板 -->
+            <div class="control-panel">
+                <div class="panel-header">
+                    <div class="header-light"></div>
+                    <span>系统控制</span>
+                </div>
+                <div class="panel-body">
+                    <!-- 视频加载协议（初始显示） -->
+                    <div id="video-consent-section">
+                        <div class="control-section">
+                            <div class="label">视频系统</div>
+                            <div class="status-display">
+                                <div class="screen">
+                                    <div class="scan-line"></div>
+                                    <div class="text">用户协议-视频加载</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button-section single-button">
+                            <button id="start-loading" class="control-btn enable">
+                                <div class="btn-face">
+                                    <div class="btn-text">开始加载</div>
+                                    <div class="btn-indicator"></div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 加载进度阶段（初始隐藏） -->
+                    <div id="loading-progress-section" class="hidden">
+                        <div class="control-section">
+                            <div class="label">系统初始化</div>
+                            <div class="status-display">
+                                <div class="screen">
+                                    <div class="scan-line"></div>
+                                    <div class="text" id="loading-text">正在加载资源...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span id="progress-percent">0%</span>
+                                <span id="progress-detail">准备中...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 音频选择阶段（初始隐藏） -->
+                    <div id="audio-section" class="hidden">
+                        <div class="control-section">
+                            <div class="label">音频系统</div>
+                            <div class="status-display">
+                                <div class="screen">
+                                    <div class="scan-line"></div>
+                                    <div class="text">用户协议-声音系统</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button-section">
+                            <button id="enable-audio" class="control-btn enable">
+                                <div class="btn-face">
+                                    <div class="btn-text">开启</div>
+                                    <div class="btn-indicator"></div>
+                                </div>
+                            </button>
+                            <button id="disable-audio" class="control-btn disable">
+                                <div class="btn-face">
+                                    <div class="btn-text">关闭</div>
+                                    <div class="btn-indicator"></div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 首页容器 -->
+    <div id="homepage" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="homepage-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="homepage-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 宇宙背景 -->
+        <div class="background-container">
+            <img id="universe-bg" src="assets/backgrounds/space.jpg" alt="宇宙背景" class="background-image">
+        </div>
+        
+        <!-- 帷幕效果 -->
+        <div class="curtain-top"></div>
+        <div class="curtain-bottom"></div>
+        
+        <!-- 传送门容器 -->
+        <div class="portal-container">
+            <img id="portal" src="assets/ui/portal.png" alt="传送门" class="portal-image">
+        </div>
+        
+        <!-- 引导文字 -->
+        <div class="guide-text">
+            <p>点击传送门开始冒险</p>
+        </div>
+        
+        <!-- 音效文件 -->
+        <audio id="portal-appear-sound" preload="auto">
+            <source src="assets/common/audio/sfx/portal_appear.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 首页BGM -->
+        <audio id="homepage-bgm" preload="auto" loop>
+            <source src="assets/common/audio/bgm/main.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 轻松BGM - 第三幕门口到回收站 -->
+        <audio id="bgm-relaxed" preload="auto" loop>
+            <source src="assets/common/audio/bgm/relaxed.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 悬疑2 BGM - 第五章客厅 -->
+        <audio id="bgm-suspense2" preload="auto" loop>
+            <source src="assets/common/audio/bgm/suspense2.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 战斗BGM - 第六章战斗 -->
+        <audio id="bgm-battle" preload="auto" loop>
+            <source src="assets/common/audio/bgm/battle.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 吃饭BGM - 日式餐厅 -->
+        <audio id="bgm-dining" preload="auto" loop>
+            <source src="assets/common/audio/bgm/dining.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 开门音效 -->
+        <audio id="sfx-door-open" preload="auto">
+            <source src="assets/common/audio/sfx/door_open.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 紧张音效 -->
+        <audio id="sfx-tension" preload="auto">
+            <source src="assets/common/audio/sfx/tension.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 格挡音效 -->
+        <audio id="sfx-block" preload="auto">
+            <source src="assets/common/audio/sfx/block.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 砍断手臂音效 -->
+        <audio id="sfx-cut-arm" preload="auto">
+            <source src="assets/common/audio/sfx/cut_arm.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 上传图片音效 -->
+        <audio id="sfx-upload" preload="auto">
+            <source src="assets/common/audio/sfx/sfx-upload.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 收到信息音效 -->
+        <audio id="sfx-message" preload="auto">
+            <source src="assets/common/audio/sfx/sfx-message.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 3D打印机音效 -->
+        <audio id="sfx-3d-printer" preload="auto">
+            <source src="assets/common/audio/sfx/3D打印机.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 打开盒子音效 -->
+        <audio id="sfx-open-box" preload="auto">
+            <source src="assets/common/audio/sfx/打开盒子.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 打开看食谱音效 -->
+        <audio id="sfx-open-recipe" preload="auto">
+            <source src="assets/common/audio/sfx/打开看食谱.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 打手音效 -->
+        <audio id="sfx-slap-hand" preload="auto">
+            <source src="assets/common/audio/sfx/打手.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 电脑开机音效 -->
+        <audio id="sfx-pc-boot" preload="auto">
+            <source src="assets/common/audio/sfx/电脑开机.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 喝汤音效 -->
+        <audio id="sfx-drink-soup" preload="auto">
+            <source src="assets/common/audio/sfx/喝汤.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 回忆音效 -->
+        <audio id="sfx-memory" preload="auto">
+            <source src="assets/common/audio/sfx/回忆.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 门窗锁住音效 -->
+        <audio id="sfx-locked" preload="auto">
+            <source src="assets/common/audio/sfx/门窗锁住了.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 拿出食谱音效 -->
+        <audio id="sfx-take-recipe" preload="auto">
+            <source src="assets/common/audio/sfx/拿出食谱.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 破门而入音效 -->
+        <audio id="sfx-break-in" preload="auto">
+            <source src="assets/common/audio/sfx/破门而入.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 揉丢纸团音效 -->
+        <audio id="sfx-crumple-paper" preload="auto">
+            <source src="assets/common/audio/sfx/揉丢纸团.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 书架音效 -->
+        <audio id="sfx-bookshelf" preload="auto">
+            <source src="assets/common/audio/sfx/书架.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 鼠标点击音效 -->
+        <audio id="sfx-mouse-click" preload="auto">
+            <source src="assets/common/audio/sfx/鼠标点击.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 帅气落地音效 -->
+        <audio id="sfx-cool-landing" preload="auto">
+            <source src="assets/common/audio/sfx/帅气落地.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 嗦面音效 -->
+        <audio id="sfx-slurp-noodle" preload="auto">
+            <source src="assets/common/audio/sfx/嗦面.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 握紧铅笔剑音效 -->
+        <audio id="sfx-grip-sword" preload="auto">
+            <source src="assets/common/audio/sfx/握紧铅笔剑.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 修正液枪发射音效 -->
+        <audio id="sfx-whiteout-gun" preload="auto">
+            <source src="assets/common/audio/sfx/修正液枪发射.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 眼神音效 -->
+        <audio id="sfx-glare" preload="auto">
+            <source src="assets/common/audio/sfx/眼神.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 装填弹药音效 -->
+        <audio id="sfx-reload" preload="auto">
+            <source src="assets/common/audio/sfx/装填弹药.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- 座位移开音效 -->
+        <audio id="sfx-move-seat" preload="auto">
+            <source src="assets/common/audio/sfx/座位移开.mp3" type="audio/mpeg">
+        </audio>
+        
+        <!-- rick好吃音效 -->
+        <audio id="sfx-rick-yummy" preload="auto">
+            <source src="assets/common/audio/sfx/rick好吃.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 第一幕：片头视频页面 -->
+    <div id="chapter1-scene1" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="video-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="video-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频播放容器 -->
+        <div class="video-container">
+            <video id="opening-video" preload="auto" playsinline>
+                <source src="assets/videos/opening.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            
+            <!-- 跳过按钮 -->
+            <button id="skip-video-btn" class="skip-button">
+                <span>跳过</span>
+                <div class="skip-icon">⏭</div>
+            </button>
+            
+            <!-- 视频控制按钮 -->
+            <div class="video-controls" id="opening-video-controls">
+                <button class="video-ctrl-btn" id="opening-pause-btn" title="暂停/播放">⏸</button>
+                <button class="video-ctrl-btn speed-btn" id="opening-speed-btn" title="倍速">1x</button>
+            </div>
+        </div>
+    </div>
+    <div id="transition-guide" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="transition-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="transition-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 定帧背景 -->
+        <div class="freeze-frame-container">
+            <img id="freeze-frame-bg" src="assets/backgrounds/opening_end.jpg" alt="第一幕最后定帧" class="freeze-frame-image">
+        </div>
+        
+        <!-- 过渡引导文字 - 横版 -->
+        <div class="transition-guide-text">
+            <p>点击继续冒险</p>
+        </div>
+    </div>
+
+    <!-- 第二幕：车库视频页面 -->
+    <div id="chapter2-scene1" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="garage-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="garage-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频播放容器 -->
+        <div class="video-container">
+            <video id="garage-video" preload="auto" playsinline>
+                <source src="assets/videos/garage.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            
+            <!-- 跳过按钮 -->
+            <button id="skip-garage-btn" class="skip-button">
+                <span>跳过</span>
+                <div class="skip-icon">⏭</div>
+            </button>
+            
+            <!-- 视频控制按钮 -->
+            <div class="video-controls" id="garage-video-controls">
+                <button class="video-ctrl-btn" id="garage-pause-btn" title="暂停/播放">⏸</button>
+                <button class="video-ctrl-btn speed-btn" id="garage-speed-btn" title="倍速">1x</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二幕：搜索神秘人场景 -->
+    <div id="chapter2-scene2" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="search-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="search-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜索神秘人背景 -->
+        <div class="search-background-container">
+            <img id="search-bg" src="assets/backgrounds/search_scene.jpg" alt="搜索神秘人" class="search-background-image">
+        </div>
+        
+        <!-- 可点击的衣服区域 -->
+        <div class="clickable-area large-hint" id="clothes-area" style="top: 250px; left: 500px; width: 600px; height: 600px;">
+            <div class="click-hint">
+                <div class="hint-pulse"></div>
+                <span class="hint-text">点击搜索</span>
+            </div>
+        </div>
+        
+        <!-- 引导文字 -->
+        <div class="search-guide-text">
+            <p>搜索神秘人的外套</p>
+        </div>
+    </div>
+
+    <!-- 对话系统界面 -->
+    <div id="dialog-system" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="dialog-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="dialog-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 背景（继续显示搜索画面，但变暗） -->
+        <div class="dialog-background">
+            <img src="assets/backgrounds/search_scene.jpg" alt="背景" class="dialog-bg-image">
+            <div class="dialog-overlay"></div>
+        </div>
+
+        <!-- 道具展示区域 -->
+        <div class="evidence-display" id="evidence-display">
+            <div class="evidence-container">
+                <img id="evidence-image" src="assets/evidence/id_card.png" alt="当前道具" class="evidence-img">
+            </div>
+            <!-- 道具切换按钮 -->
+            <div class="evidence-navigation">
+                <button class="evidence-nav-btn" id="prev-evidence">◀</button>
+                <span class="evidence-counter" id="evidence-counter">1/7</span>
+                <button class="evidence-nav-btn" id="next-evidence">▶</button>
+            </div>
+        </div>
+
+        <!-- 人物立绘 -->
+        <div class="character-portraits">
+            <div class="character-left" id="rick-portrait">
+                <img src="assets/common/characters/rick正常.png" alt="rick" class="character-img">
+            </div>
+            <div class="character-right" id="morty-portrait">
+                <img src="assets/common/characters/morty正常.png" alt="morty" class="character-img">
+            </div>
+        </div>
+
+        <!-- 逆转裁判风格对话框 -->
+        <div class="dialog-box" id="dialog-box">
+            <div class="dialog-header">
+                <div class="speaker-name" id="speaker-name">rick</div>
+                <div class="dialog-controls">
+                    <button class="dialog-nav-btn" id="back-dialog-btn" title="回退" disabled>◀</button>
+                    <button class="dialog-nav-btn" id="forward-dialog-btn" title="前进">▶</button>
+                    <button class="dialog-btn" id="skip-dialog-btn">跳过</button>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-text" id="dialog-text"></div>
+                <div class="dialog-cursor" id="dialog-cursor">▼</div>
+            </div>
+        </div>
+
+        <!-- 音效文件 -->
+        <audio id="dialog-sound" preload="auto">
+            <source src="assets/common/audio/sfx/dialog.mp3" type="audio/mpeg">
+        </audio>
+        <!-- 移动端对话音效 -->
+        <audio id="mobile-dialog-sound" preload="auto">
+            <source src="assets/common/audio/sfx/dialog2.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 第三幕：开场视频页面 -->
+    <div id="chapter3-scene1" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="chapter3-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter3-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频播放容器 -->
+        <div class="video-container">
+            <video id="chapter3-video" preload="auto" playsinline>
+                <source src="assets/videos/chapter3_crisis.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            
+            <!-- 跳过按钮 -->
+            <button id="skip-chapter3-btn" class="skip-button">
+                <span>跳过</span>
+                <div class="skip-icon">⏭</div>
+            </button>
+            
+            <!-- 视频控制按钮 -->
+            <div class="video-controls" id="chapter3-video-controls">
+                <button class="video-ctrl-btn" id="chapter3-pause-btn" title="暂停/播放">⏸</button>
+                <button class="video-ctrl-btn speed-btn" id="chapter3-speed-btn" title="倍速">1x</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三幕：神秘人家门口场景 -->
+    <div id="chapter3-scene2" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="chapter3-door-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter3-door-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 家门口背景 -->
+        <div class="scene-background-container">
+            <img id="chapter3-bg" src="assets/backgrounds/door_scene.jpg" alt="神秘人家门口" class="scene-background-image">
+        </div>
+        
+        <!-- 可点击的房门区域 -->
+        <div class="clickable-area large-hint" id="door-area" style="display: none; top: 100px; left: 650px; width: 650px; height: 1000px;">
+            <div class="click-hint">
+                <div class="hint-pulse"></div>
+                <span class="hint-text">点击房门</span>
+            </div>
+        </div>
+        
+        <!-- 对话框（无立绘和道具版本） -->
+        <div class="dialog-box" id="chapter3-dialog-box">
+            <div class="dialog-header">
+                <div class="speaker-name" id="chapter3-speaker-name">morty</div>
+                <div class="dialog-controls">
+                    <button class="dialog-nav-btn" id="back-chapter3-dialog-btn" title="回退" disabled>◀</button>
+                    <button class="dialog-nav-btn" id="forward-chapter3-dialog-btn" title="前进">▶</button>
+                    <button class="dialog-btn" id="skip-chapter3-dialog-btn">跳过</button>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-text" id="chapter3-dialog-text"></div>
+                <div class="dialog-cursor" id="chapter3-dialog-cursor">▼</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三幕：房间内场景 -->
+    <div id="chapter3-scene3" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="chapter3-room-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter3-room-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 房间背景 -->
+        <div class="scene-background-container">
+            <img id="chapter3-room-bg" src="assets/backgrounds/room_scene.jpg" alt="走入房间" class="scene-background-image">
+        </div>
+        
+        <!-- 对话框（无立绘和道具版本） -->
+        <div class="dialog-box" id="chapter3-room-dialog-box">
+            <div class="dialog-header">
+                <div class="speaker-name" id="chapter3-room-speaker-name">rick</div>
+                <div class="dialog-controls">
+                    <button class="dialog-nav-btn" id="back-chapter3-room-dialog-btn" title="回退" disabled>◀</button>
+                    <button class="dialog-nav-btn" id="forward-chapter3-room-dialog-btn" title="前进">▶</button>
+                    <button class="dialog-btn" id="skip-chapter3-room-dialog-btn">跳过</button>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-text" id="chapter3-room-dialog-text"></div>
+                <div class="dialog-cursor" id="chapter3-room-dialog-cursor">▼</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三幕：厨房场景 -->
+    <div id="chapter3-scene4" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="chapter3-kitchen-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter3-kitchen-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 厨房背景 -->
+        <div class="scene-background-container">
+            <img id="chapter3-kitchen-bg" src="assets/backgrounds/kitchen_scene.jpg" alt="厨房场景" class="scene-background-image">
+        </div>
+
+        <!-- 人物立绘 -->
+        <div class="character-portraits">
+            <div class="character-left" id="chapter3-rick-portrait">
+                <img src="assets/common/characters/rick正常.png" alt="rick" class="character-img">
+            </div>
+            <div class="character-right" id="chapter3-morty-portrait">
+                <img src="assets/common/characters/morty正常.png" alt="morty" class="character-img">
+            </div>
+        </div>
+
+        <!-- 对话框（带立绘版本） -->
+        <div class="dialog-box" id="chapter3-kitchen-dialog-box">
+            <div class="dialog-header">
+                <div class="speaker-name" id="chapter3-kitchen-speaker-name">rick</div>
+                <div class="dialog-controls">
+                    <button class="dialog-nav-btn" id="back-chapter3-kitchen-dialog-btn" title="回退" disabled>◀</button>
+                    <button class="dialog-nav-btn" id="forward-chapter3-kitchen-dialog-btn" title="前进">▶</button>
+                    <button class="dialog-btn" id="skip-chapter3-kitchen-dialog-btn">跳过</button>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-text" id="chapter3-kitchen-dialog-text"></div>
+                <div class="dialog-cursor" id="chapter3-kitchen-dialog-cursor">▼</div>
+            </div>
+        </div>
+
+        <!-- 音效文件 -->
+        <audio id="chapter3-dialog-sound" preload="auto">
+            <source src="assets/common/audio/sfx/dialog.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 第三幕：客厅场景 -->
+    <div id="chapter3-scene5" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="chapter3-living-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter3-living-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 客厅背景 -->
+        <div class="scene-background-container">
+            <img id="chapter3-living-bg" src="assets/backgrounds/living_scene.jpg" alt="客厅场景" class="scene-background-image">
+        </div>
+
+        <!-- 道具展示区域 -->
+        <div class="evidence-display" id="chapter3-evidence-display">
+            <div class="evidence-container">
+                <img id="chapter3-evidence-image" src="assets/evidence/music_area.png" alt="当前道具" class="evidence-img">
+            </div>
+            <!-- 道具切换按钮 -->
+            <div class="evidence-navigation">
+                <button class="evidence-nav-btn" id="chapter3-prev-evidence">◀</button>
+                <span class="evidence-counter" id="chapter3-evidence-counter">1/4</span>
+                <button class="evidence-nav-btn" id="chapter3-next-evidence">▶</button>
+            </div>
+        </div>
+
+        <!-- 人物立绘 -->
+        <div class="character-portraits">
+            <div class="character-left" id="chapter3-living-rick-portrait">
+                <img src="assets/common/characters/rick正常.png" alt="rick" class="character-img">
+            </div>
+            <div class="character-right" id="chapter3-living-morty-portrait">
+                <img src="assets/common/characters/morty正常.png" alt="morty" class="character-img">
+            </div>
+        </div>
+
+        <!-- 对话框 -->
+        <div class="dialog-box" id="chapter3-living-dialog-box">
+            <div class="dialog-header">
+                <div class="speaker-name" id="chapter3-living-speaker-name">rick</div>
+                <div class="dialog-controls">
+                    <button class="dialog-nav-btn" id="back-chapter3-living-dialog-btn" title="回退" disabled>◀</button>
+                    <button class="dialog-nav-btn" id="forward-chapter3-living-dialog-btn" title="前进">▶</button>
+                    <button class="dialog-btn" id="skip-chapter3-living-dialog-btn">跳过</button>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-text" id="chapter3-living-dialog-text"></div>
+                <div class="dialog-cursor" id="chapter3-living-dialog-cursor">▼</div>
+            </div>
+        </div>
+
+        <!-- 音效文件 -->
+        <audio id="chapter3-living-dialog-sound" preload="auto">
+            <source src="assets/common/audio/sfx/dialog.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 第三幕：书房场景 -->
+    <div id="chapter3-scene6" class="page-container hidden">
+        <!-- 全局音效开关 - 固定在右上角 -->
+        <div id="chapter3-study-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter3-study-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 书房背景 -->
+        <div class="scene-background-container">
+            <img id="chapter3-study-bg" src="assets/backgrounds/study_scene.jpg" alt="书房场景" class="scene-background-image">
+        </div>
+
+        <!-- 道具展示区域 -->
+        <div class="evidence-display" id="chapter3-study-evidence-display">
+            <div class="evidence-container">
+                <img id="chapter3-study-evidence-image" src="assets/evidence/bookshelf.png" alt="当前道具" class="evidence-img">
+            </div>
+            <!-- 道具切换按钮 -->
+            <div class="evidence-navigation">
+                <button class="evidence-nav-btn" id="chapter3-study-prev-evidence">◀</button>
+                <span class="evidence-counter" id="chapter3-study-evidence-counter">1/3</span>
+                <button class="evidence-nav-btn" id="chapter3-study-next-evidence">▶</button>
+            </div>
+        </div>
+
+        <!-- 人物立绘 -->
+        <div class="character-portraits">
+            <div class="character-left" id="chapter3-study-rick-portrait">
+                <img src="assets/common/characters/rick正常.png" alt="rick" class="character-img">
+            </div>
+            <div class="character-right" id="chapter3-study-morty-portrait">
+                <img src="assets/common/characters/morty正常.png" alt="morty" class="character-img">
+            </div>
+        </div>
+
+        <!-- 对话框 -->
+        <div class="dialog-box" id="chapter3-study-dialog-box">
+            <div class="dialog-header">
+                <div class="speaker-name" id="chapter3-study-speaker-name">rick</div>
+                <div class="dialog-controls">
+                    <button class="dialog-nav-btn" id="back-chapter3-study-dialog-btn" title="回退" disabled>◀</button>
+                    <button class="dialog-nav-btn" id="forward-chapter3-study-dialog-btn" title="前进">▶</button>
+                    <button class="dialog-btn" id="skip-chapter3-study-dialog-btn">跳过</button>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-text" id="chapter3-study-dialog-text"></div>
+                <div class="dialog-cursor" id="chapter3-study-dialog-cursor">▼</div>
+            </div>
+        </div>
+
+        <!-- 音效文件 -->
+        <audio id="chapter3-study-dialog-sound" preload="auto">
+            <source src="assets/common/audio/sfx/dialog.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 第四幕：电脑桌面场景 -->
+    <div id="chapter4-scene1" class="page-container hidden">
+        <!-- 全局音效开关 -->
+        <div id="chapter4-desktop-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter4-desktop-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 电脑桌面背景 -->
+        <div class="scene-background-container">
+            <img id="chapter4-desktop-bg" src="assets/backgrounds/computer_desktop.jpg" alt="电脑桌面" class="scene-background-image">
+        </div>
+
+        <!-- 弹出图片层（文件夹、浏览器等） -->
+        <div class="popup-overlay" id="chapter4-popup-overlay">
+            <img id="chapter4-popup-image" src="" alt="弹出内容" class="popup-image">
+            <!-- 点击继续引导文字（仅在食谱时显示） -->
+            <div class="transition-guide-text" id="chapter4-continue-guide" style="display: none;">
+                <p>点击继续冒险</p>
+            </div>
+        </div>
+
+        <!-- Rick和Morty凑在电脑前的大图 -->
+        <div class="watching-overlay" id="chapter4-watching-overlay">
+            <img src="assets/evidence/rick_morty_watching.png" alt="Rick和Morty看电脑" class="watching-image">
+        </div>
+
+        <!-- 可点击区域：Projects文件夹 - 左上位置，文字在右边横版 -->
+        <div class="clickable-area desktop-clickable" id="projects-folder-area" style="display: none; top: 460px; left: 10px; width: 110px; height: 110px;">
+            <div class="click-hint horizontal-hint">
+                <div class="hint-pulse"></div>
+                <span class="hint-text">Projects</span>
+            </div>
+        </div>
+
+        <!-- 可点击区域：浏览器 - 左上位置，文字在右边横版 -->
+        <div class="clickable-area desktop-clickable" id="browser-area" style="display: none; top: 160px; left: 10px; width: 110px; height: 110px;">
+            <div class="click-hint horizontal-hint">
+                <div class="hint-pulse"></div>
+                <span class="hint-text">浏览器</span>
+            </div>
+        </div>
+
+        <!-- 可点击区域：回收站 - 左上位置，文字在右边横版 -->
+        <div class="clickable-area desktop-clickable" id="recycle-bin-area" style="display: none; top: 300px; left: 10px; width: 110px; height: 110px;">
+            <div class="click-hint horizontal-hint">
+                <div class="hint-pulse"></div>
+                <span class="hint-text">回收站</span>
+            </div>
+        </div>
+
+        <!-- 可点击区域：食谱文档 - 往右50像素，横版排版 -->
+        <div class="clickable-area desktop-clickable" id="recipe-area" style="display: none; top: 280px; left: 450px; width: 150px; height: 100px;">
+            <div class="click-hint horizontal-hint">
+                <div class="hint-pulse"></div>
+                <span class="hint-text">食谱</span>
+            </div>
+        </div>
+
+        <!-- 人物立绘 -->
+        <div class="character-portraits">
+            <div class="character-left" id="chapter4-rick-portrait">
+                <img src="assets/common/characters/rick正常.png" alt="rick" class="character-img">
+            </div>
+            <div class="character-right" id="chapter4-morty-portrait">
+                <img src="assets/common/characters/morty正常.png" alt="morty" class="character-img">
+            </div>
+        </div>
+
+        <!-- 对话框 -->
+        <div class="dialog-box" id="chapter4-dialog-box">
+            <div class="dialog-header">
+                <div class="speaker-name" id="chapter4-speaker-name">rick</div>
+                <div class="dialog-controls">
+                    <button class="dialog-nav-btn" id="back-chapter4-dialog-btn" title="回退" disabled>◀</button>
+                    <button class="dialog-nav-btn" id="forward-chapter4-dialog-btn" title="前进">▶</button>
+                    <button class="dialog-btn" id="skip-chapter4-dialog-btn">跳过</button>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-text" id="chapter4-dialog-text"></div>
+                <div class="dialog-cursor" id="chapter4-dialog-cursor">▼</div>
+            </div>
+        </div>
+
+        <!-- 音效文件 -->
+        <audio id="chapter4-dialog-sound" preload="auto">
+            <source src="assets/common/audio/sfx/dialog.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 第五幕：开场视频页面 -->
+    <div id="chapter5-scene1" class="page-container hidden">
+        <!-- 全局音效开关 -->
+        <div id="chapter5-video-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter5-video-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频播放容器 -->
+        <div class="video-container">
+            <video id="chapter5-video" preload="auto" playsinline>
+                <source src="assets/videos/回忆.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            
+            <!-- 跳过按钮 -->
+            <button id="skip-chapter5-video-btn" class="skip-button">
+                <span>跳过</span>
+                <div class="skip-icon">⏭</div>
+            </button>
+            
+            <!-- 视频控制按钮 -->
+            <div class="video-controls" id="chapter5-video-controls">
+                <button class="video-ctrl-btn" id="chapter5-pause-btn" title="暂停/播放">⏸</button>
+                <button class="video-ctrl-btn speed-btn" id="chapter5-speed-btn" title="倍速">1x</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第五幕：客厅场景 -->
+    <div id="chapter5-scene2" class="page-container hidden">
+        <!-- 全局音效开关 -->
+        <div id="chapter5-living-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter5-living-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 客厅背景 -->
+        <div class="scene-background-container">
+            <img id="chapter5-living-bg" src="assets/backgrounds/chapter5_living.jpg" alt="第五幕客厅" class="scene-background-image">
+        </div>
+
+        <!-- 道具展示区域 -->
+        <div class="evidence-display" id="chapter5-evidence-display">
+            <div class="evidence-container">
+                <img id="chapter5-evidence-image" src="assets/evidence/tower_destroyed.png" alt="当前道具" class="evidence-img">
+            </div>
+            <!-- 道具切换按钮 -->
+            <div class="evidence-navigation">
+                <button class="evidence-nav-btn" id="chapter5-prev-evidence">◀</button>
+                <span class="evidence-counter" id="chapter5-evidence-counter">1/6</span>
+                <button class="evidence-nav-btn" id="chapter5-next-evidence">▶</button>
+            </div>
+        </div>
+
+        <!-- 可点击区域：绝密箱子 - 屏幕正中间往下40像素，正方形 -->
+        <div class="clickable-area large-hint" id="secret-box-area" style="display: none; top: calc(50% + 40px - 75px); left: calc(50% - 75px); width: 150px; height: 150px;">
+            <div class="click-hint">
+                <div class="hint-pulse"></div>
+                <span class="hint-text" style="white-space: nowrap;">绝密箱子</span>
+            </div>
+        </div>
+
+        <!-- 可点击区域：王阿姨 - 高度缩短30% -->
+        <div class="clickable-area large-hint" id="landlady-area" style="display: none; top: 250px; left: 1000px; width: 300px; height: 350px;">
+            <div class="click-hint">
+                <div class="hint-pulse"></div>
+                <span class="hint-text" style="white-space: nowrap;">王阿姨</span>
+            </div>
+        </div>
+
+        <!-- 可点击区域：电视上的雪人 - 画面正中间往左100像素，往上100像素，16:9长方形 -->
+        <div class="clickable-area large-hint" id="snowman-area" style="display: none; top: calc(50% - 135px - 100px); left: calc(50% - 100px - 240px); width: 480px; height: 270px;">
+            <div class="click-hint">
+                <div class="hint-pulse"></div>
+                <span class="hint-text">雪人</span>
+            </div>
+        </div>
+
+        <!-- 人物立绘 -->
+        <div class="character-portraits">
+            <div class="character-left" id="chapter5-rick-portrait">
+                <img src="assets/common/characters/rick正常.png" alt="rick" class="character-img">
+            </div>
+            <div class="character-right" id="chapter5-morty-portrait">
+                <img src="assets/common/characters/morty正常.png" alt="morty" class="character-img">
+            </div>
+        </div>
+
+        <!-- 对话框 -->
+        <div class="dialog-box" id="chapter5-dialog-box">
+            <div class="dialog-header">
+                <div class="speaker-name" id="chapter5-speaker-name">rick</div>
+                <div class="dialog-controls">
+                    <button class="dialog-nav-btn" id="back-chapter5-dialog-btn" title="回退" disabled>◀</button>
+                    <button class="dialog-nav-btn" id="forward-chapter5-dialog-btn" title="前进">▶</button>
+                    <button class="dialog-btn" id="skip-chapter5-dialog-btn">跳过</button>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-text" id="chapter5-dialog-text"></div>
+                <div class="dialog-cursor" id="chapter5-dialog-cursor">▼</div>
+            </div>
+        </div>
+
+        <!-- 音效文件 -->
+        <audio id="chapter5-dialog-sound" preload="auto">
+            <source src="assets/common/audio/sfx/dialog.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 第六幕：战斗与结局 -->
+    <div id="chapter6-scene1" class="page-container hidden">
+        <!-- 全局音效开关 -->
+        <div id="chapter6-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="chapter6-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 场景背景（可动态切换） -->
+        <div class="scene-background-container">
+            <img id="chapter6-bg" src="assets/backgrounds/chapter6_penguin_boss.jpg" alt="第六幕场景" class="scene-background-image">
+        </div>
+
+        <!-- 黑幕报幕层 -->
+        <div class="blackscreen-overlay" id="chapter6-blackscreen">
+            <div class="blackscreen-text" id="chapter6-blackscreen-text"></div>
+        </div>
+
+        <!-- 道具展示区域 -->
+        <div class="evidence-display" id="chapter6-evidence-display">
+            <div class="evidence-container">
+                <img id="chapter6-evidence-image" src="" alt="当前道具" class="evidence-img">
+            </div>
+            <!-- 道具切换按钮 -->
+            <div class="evidence-navigation">
+                <button class="evidence-nav-btn" id="chapter6-prev-evidence">◀</button>
+                <span class="evidence-counter" id="chapter6-evidence-counter">1/5</span>
+                <button class="evidence-nav-btn" id="chapter6-next-evidence">▶</button>
+            </div>
+        </div>
+
+        <!-- 人物立绘 -->
+        <div class="character-portraits">
+            <div class="character-left" id="chapter6-rick-portrait">
+                <img src="assets/common/characters/rick正常.png" alt="rick" class="character-img">
+            </div>
+            <div class="character-right" id="chapter6-morty-portrait">
+                <img src="assets/common/characters/morty正常.png" alt="morty" class="character-img">
+            </div>
+        </div>
+
+        <!-- 对话框 -->
+        <div class="dialog-box" id="chapter6-dialog-box">
+            <div class="dialog-header">
+                <div class="speaker-name" id="chapter6-speaker-name">rick</div>
+                <div class="dialog-controls">
+                    <button class="dialog-nav-btn" id="back-chapter6-dialog-btn" title="回退" disabled>◀</button>
+                    <button class="dialog-nav-btn" id="forward-chapter6-dialog-btn" title="前进">▶</button>
+                    <button class="dialog-btn" id="skip-chapter6-dialog-btn">跳过</button>
+                </div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-text" id="chapter6-dialog-text"></div>
+                <div class="dialog-cursor" id="chapter6-dialog-cursor">▼</div>
+            </div>
+        </div>
+
+        <!-- 音效文件 -->
+        <audio id="chapter6-dialog-sound" preload="auto">
+            <source src="assets/common/audio/sfx/dialog.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- 结尾视频场景 -->
+    <div id="ending-scene" class="page-container hidden">
+        <!-- 全局音效开关 -->
+        <div id="ending-audio-toggle" class="global-audio-toggle">
+            <div class="toggle-container">
+                <span class="toggle-label">音效</span>
+                <div class="toggle-switch" id="ending-audio-switch">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频播放容器 -->
+        <div class="video-container">
+            <video id="ending-video" preload="auto" playsinline>
+                <source src="assets/videos/ending.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+            
+            <!-- 跳过按钮 -->
+            <button id="skip-ending-btn" class="skip-button">
+                <span>跳过</span>
+                <div class="skip-icon">⏭</div>
+            </button>
+            
+            <!-- 视频控制按钮 -->
+            <div class="video-controls" id="ending-video-controls">
+                <button class="video-ctrl-btn" id="ending-pause-btn" title="暂停/播放">⏸</button>
+                <button class="video-ctrl-btn speed-btn" id="ending-speed-btn" title="倍速">1x</button>
+            </div>
+        </div>
+
+        <!-- 结束后的引导文字（初始隐藏） -->
+        <div class="transition-guide-text" id="ending-guide" style="display: none;">
+            <p>点击回到开始</p>
+        </div>
+    </div>
+
+    <!-- 全局不可跳过提示 Toast -->
+    <div class="skip-toast" id="skip-toast">
+        <span class="skip-toast-icon">🚫</span>
+        <span>请先完整观看一次</span>
+    </div>
+
+    <!-- 加载GSAP动画库 -->
+    <script src="js/gsap.min.js"></script>
+    
+    <!-- 加载模块文件 -->
+    <script src="js/modules/PlayProgress.js"></script>
+    <script src="js/modules/DialogHistory.js"></script>
+    <script src="js/modules/EnhancedVideoControls.js"></script>
+    <script src="js/modules/SceneCleanup.js"></script>
+    <script src="js/modules/DialogModule.js"></script>
+    <script src="js/modules/VideoModule.js"></script>
+    <script src="js/modules/AudioModule.js"></script>
+    <script src="js/modules/SceneModule.js"></script>
+    <script src="js/modules/EvidenceModule.js"></script>
+    <script src="js/modules/DebugModule.js"></script>
+    
+    <!-- 加载数据文件 -->
+    <script src="js/data/assetConfig.js"></script>
+    <script src="js/data/dialogData.js"></script>
+    
+    <!-- 主要JavaScript代码 -->
+    <script src="js/main.js"></script>
+</body>
+</html>

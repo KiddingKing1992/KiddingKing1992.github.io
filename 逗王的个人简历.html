@@ -1,0 +1,926 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极简个人简历 | 游戏视频制作人</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#000000',
+                        secondary: '#ffffff',
+                        accent: '#888888',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .text-shadow-lg {
+                text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+    </style>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .section {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background-position: center;
+            background-size: cover;
+            z-index: -1;
+            transform: translateZ(0);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 0;
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            background-color: #fff;
+        }
+        
+        .portfolio-grid {
+            columns: 1;
+            column-gap: 1rem;
+        }
+        
+        @media (min-width: 640px) {
+            .portfolio-grid {
+                columns: 2;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .portfolio-grid {
+                columns: 3;
+            }
+        }
+        
+        .portfolio-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            position: relative;
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background-color: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #fff;
+            color: #000;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        /* 打字效果 */
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background-color: #fff;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+
+        
+        /* 视差滚动效果 */
+        .parallax-content {
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* 文字渐入效果 */
+        .char-reveal span {
+            opacity: 0;
+            filter: blur(4px);
+            transition: all 0.3s;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 悬停交互效果 */
+        .hover-scale {
+            transition: transform 0.7s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+        
+        .hover-info {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hover-info-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-info:hover .hover-info-content {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-black/90">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-light">PU YI</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#about" class="hover:text-gray-400 transition-colors duration-300">关于</a>
+                    <a href="#experience" class="hover:text-gray-400 transition-colors duration-300">经历</a>
+                    <a href="#portfolio" class="hover:text-gray-400 transition-colors duration-300">作品</a>
+                    <a href="#hobbies" class="hover:text-gray-400 transition-colors duration-300">兴趣</a>
+                    <a href="#ai" class="hover:text-gray-400 transition-colors duration-300">AI学习</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-black/90 w-full">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="#about" class="hover:text-gray-400 transition-colors duration-300">关于</a>
+                    <a href="#experience" class="hover:text-gray-400 transition-colors duration-300">经历</a>
+                    <a href="#portfolio" class="hover:text-gray-400 transition-colors duration-300">作品</a>
+                    <a href="#hobbies" class="hover:text-gray-400 transition-colors duration-300">兴趣</a>
+                    <a href="#ai" class="hover:text-gray-400 transition-colors duration-300">AI学习</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="hero" class="section relative overflow-hidden">
+        <div id="parallax-bg" class="fixed inset-0 flex items-center justify-center">
+            <div class="text-center">
+                <h1 class="text-6xl md:text-8xl font-light mb-4 parallax-content">逗王是大腿</h1>
+                <p class="text-xl md:text-2xl text-gray-400 parallax-content">
+                    我是一名<span id="typing-text" class="font-normal">AI探索者</span><span class="typing-cursor"></span>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="section bg-black relative z-10">
+        <div class="container mx-auto px-6 py-24">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-5xl font-light mb-16" data-scroll-reveal="">关于我</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div data-scroll-reveal="" data-delay="200">
+                        <div class="mb-12">
+                            <img src="assets/photo.jpg" alt="个人照片" class="w-full aspect-[1/1] object-cover hover-scale">
+                        </div>
+                    </div>
+                    
+                    <div data-scroll-reveal="" data-delay="300">
+                        <div class="grid grid-cols-[120px_1fr] gap-y-4 mb-12">
+                            <span class="text-gray-400">姓名</span>
+                            <span>浦奕</span>
+                        
+                            <span class="text-gray-400">昵称</span>
+                            <span>逗王是大腿</span>
+                        
+                            <span class="text-gray-400">职位</span>
+                            <span>执行制作人</span>
+                        
+                            <span class="text-gray-400">所在地</span>
+                            <span>上海</span>
+                        
+                            <span class="text-gray-400">工作年限</span>
+                            <span>8年</span>
+                            
+                            <span class="text-gray-400">求职意向</span>
+                            <span>制片 / 内容制作人</span>
+                            
+                            <span class="text-gray-400">毕业学校</span>
+                            <span>上海工程技术大学</span>
+                            
+                            <span class="text-gray-400">
+</span>
+                            <span>
+</span>
+                        </div>
+                        
+                        <p class="text-gray-400 mb-6 leading-relaxed char-reveal">
+                            我是一名拥有8年经验的游戏视频行业的执行制作人，剪辑后期出身，做过游戏UP，后转型管理岗，屠龙少年终成恶龙。最终还是走上了管理的不归路，与创作越走越远。
+                        </p>
+                        
+                        <p class="text-gray-400 leading-relaxed char-reveal">
+                            如今洗心革面，趁年轻还想再制作出能让观众铭记于心的优秀内容。也为了未来老了成为一名UP主继续学习。
+                        </p>
+                        
+                        <div class="mt-8">
+                            <h3 class="text-xl font-light mb-4">教育背景</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-white">上海工程技术大学</p>
+                                    <p class="text-white">数控加工技术 | 专科</p>
+                                    <p class="text-sm text-gray-400">2011 - 2014</p>
+                                </div>
+                                <div>
+                                    <p class="text-white">火星时代</p>
+                                    <p class="text-white">剪辑与包装 | 线下培训</p>
+                                    <p class="text-sm text-gray-400">2016 - 2017</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h3 class="text-xl font-light mb-4">专业证书</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-white">数控机床 二级/技师</p>
+                                    <p class="text-sm text-gray-400">2018</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-24" data-scroll-reveal="" data-delay="400">
+                    <h3 class="text-2xl font-light mb-8">专业技能</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-400">视频剪辑</span>
+                                <span class="text-gray-400">85%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 h-1">
+                                <div class="bg-white h-1" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-400">后期特效</span>
+                                <span class="text-gray-400">80%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 h-1">
+                                <div class="bg-white h-1" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-400">项目管理</span>
+                                <span class="text-gray-400">90%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 h-1">
+                                <div class="bg-white h-1" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-400">AI应用</span>
+                                <span class="text-gray-400">85%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 h-1">
+                                <div class="bg-white h-1" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-400">人员管理</span>
+                                <span class="text-gray-400">90%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 h-1">
+                                <div class="bg-white h-1" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Experience Section -->
+    <section id="experience" class="section bg-black relative z-10">
+        <div class="container mx-auto px-6 py-24">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-5xl font-light mb-16" data-scroll-reveal="">工作经历</h2>
+                
+                <div class="space-y-16">
+                    <!-- Work Experience -->
+                    <div>
+                        <h3 class="text-2xl font-light mb-8" data-scroll-reveal="" data-delay="200">职业历程</h3>
+                        <div class="space-y-12">
+                            <div class="timeline-item" data-scroll-reveal="" data-delay="300">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-light text-white">执行制作人</h4>
+                                    <span class="text-gray-400">2021 - 至今</span>
+                                </div>
+                                <p class="text-gray-300 mb-2">月退文化-Z组（是大腿工作室）</p>
+                                <p class="text-gray-400">公司业务转型，逐渐负责项目组TO B业务。成立工作室武汉分部，同时带领上海武汉最多时40+人员完成各个TO B业务的执行与规划。日常工作：项目竞标，项目管理。人员的招聘、管理、与人才培养。对外维护客户关系、对内与各中台部门各工作室协作配合。参与孵化培养工作室艺人 锤子game（B站：102W粉丝）。</p>
+                            </div>
+                            
+                            <div class="timeline-item" data-scroll-reveal="" data-delay="400">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-light text-white">内容总监</h4>
+                                    <span class="text-gray-400">2019 - 2022</span>
+                                </div>
+                                <p class="text-gray-300 mb-2">月退文化-是大腿项目组</p>
+                                <p class="text-gray-400">负责是大腿频道（B站百大320W粉）旗下主播真会玩系列节目的节目制片、监制、审核。负责项目组下人员招聘、培养、管理。旗下拥有联盟篇、主机篇、女神篇、SHOW艺篇、起小点top10、挑战篇、鬼畜篇、特别篇等。另培养孵化是大腿艺人小见见与长歌（B站165W粉）。</p>
+                            </div>
+                            
+                            <div class="timeline-item" data-scroll-reveal="" data-delay="500">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-light text-white">后期剪辑</h4>
+                                    <span class="text-gray-400">2017 - 2019</span>
+                                </div>
+                                <p class="text-gray-300 mb-2">司达特尔-是大腿   （月退文化改名前）</p>
+                                <p class="text-gray-400">主播真会玩主机篇 后期。与一名前期同学一起完成一档周更的节目。除了前期素材收集，基本独立完成节目所有内容部分。空余时间作为PUBG游戏的一名游戏UP，完成一档个人系列节目吃鸡真赤鸡，偶尔参与PUBG线下比赛解说。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Experience -->
+                    <div>
+                        <h3 class="text-2xl font-light mb-8" data-scroll-reveal="" data-delay="200">项目经历</h3>
+                        <div class="space-y-12">
+                            <div class="timeline-item" data-scroll-reveal="" data-delay="300">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-light text-white">PV宣传、真人实拍、三方号、海外买量、节点版本宣传等</h4>
+                                    <span class="text-gray-400">2021~至今</span>
+                                </div>
+                                <p class="text-gray-300 mb-2">
+</p>
+                                <p class="text-gray-400">TO B业务的短线项目主要包含了大DAU游戏的PV制作、一些三方号的运营、海外买量信息流业务、节点时期特殊内容需求。参与项目有但不限于&lt;原神三方号孵化&gt;&lt;海外绝区零三方号&gt;&lt;万国觉醒线下朱一旦联动&gt;&lt;虎牙直播年度回顾&gt;&lt;死神手绘工作室地推&gt;&lt;永劫无间手游官方PV&gt;&lt;PUBG PCL赛事混剪&gt;&lt;剑与远征版本PV&gt;等</p>
+                            </div>
+                            
+                            <div class="timeline-item" data-scroll-reveal="" data-delay="400">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-light text-white">驻场业务</h4>
+                                    <span class="text-gray-400">2023 - 至今</span>
+                                </div>
+                                <p class="text-gray-300 mb-2">
+</p>
+                                <p class="text-gray-400">23年起负责带领团队去到甲方公司驻场工作，培养人员在甲方公司直接参与协作。驻场业务拥有更高效的沟通，更快更好的能理解客户需求。25年又成功拓展人员引擎制作的能力，大大的增加了业务的壁垒性。成功的让甲方“离不开”我们。参与过驻场的甲方公司有&lt;心动网络&gt;&lt;腾讯&gt;&lt;网易&gt;&lt;鹰角&gt;等。</p>
+                            </div>
+                            
+                            <div class="timeline-item" data-scroll-reveal="" data-delay="500">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-light text-white">官号代运营</h4>
+                                    <span class="text-gray-400">2022 - 至今</span>
+                                </div>
+                                <p class="text-gray-300 mb-2">
+</p>
+                                <p class="text-gray-400">22年起主要开始参与更多长线稳定业务，通过参与游戏大厂的项目竞标。拿下一些长线的官号运营项目。给TO B业务带来更可靠的稳定持续收入。主要的代运营官号有&lt;QQ飞车&gt;&lt;PUBG&gt;&lt;暗区突围海外&gt;&lt;斗罗大陆手游&gt;等</p>
+                            </div>
+                            
+                            <div class="timeline-item" data-scroll-reveal="" data-delay="500">
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-2">
+                                    <h4 class="text-xl font-light text-white">信息流项目</h4>
+                                    <span class="text-gray-400">2021~2023</span>
+                                </div>
+                                <p class="text-gray-300 mb-2">
+</p>
+                                <p class="text-gray-400">21~22年主要参与TO B业务以信息流业务为主。在武汉建立分部，降低了人员成本。培养了项目PM，逐渐开启TO B业务的转型。参与项目有但不限于&lt;阿卡夏之言&gt;&lt;天刀M&gt;&lt;NIKKE&gt;&lt;剑与远征&gt;&lt;白夜极光&gt;&lt;龙之谷&gt;等</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="section bg-black relative z-10">
+        <div class="container mx-auto px-6 py-24">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl md:text-5xl font-light mb-16" data-scroll-reveal="">作品集</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="mb-8 hover-scale" data-scroll-reveal="" data-delay="200">
+                        <a href="https://space.bilibili.com/1565155?spm_id_from=333.337.0.0" target="_blank" class="block">
+                            <div class="relative overflow-hidden aspect-[4/5] hover-info">
+                                <img src="assets/work1.jpg" alt="《星际征程》游戏预告" class="w-full h-full object-cover">
+                                <div class="hover-info-content">
+                                    <p class="text-sm text-gray-300">B站百大账号</p>
+                                </div>
+                            </div>
+                            <h3 class="mt-3 text-lg">《是大腿》B站账号</h3>
+                            <p class="text-sm text-gray-400">2018百大UP主，旗下系列节目主播真会玩到达了集锦类节目的巅峰</p>
+                        </a>
+                    </div>
+                    
+                    <div class="mb-8 hover-scale" data-scroll-reveal="" data-delay="300">
+                        <a href="https://www.bilibili.com/video/BV1kx411J723/?spm_id_from=333.1387.homepage.video_card.click&vd_source=936a267e6bf1a74a2ced1dc6d46c238e" target="_blank" class="block">
+                            <div class="relative overflow-hidden aspect-[4/5] hover-info">
+                                <img src="assets/work2.jpg" alt="《王者争霸》赛事集锦" class="w-full h-full object-cover">
+                                <div class="hover-info-content">
+                                    <p class="text-sm text-gray-300">主播真会玩鬼畜篇</p>
+                                </div>
+                            </div>
+                            <h3 class="mt-3 text-lg">《主播真会玩》鬼畜篇</h3>
+                            <p class="text-sm text-gray-400">B站入站必看系列节目，各系列节目常年登顶B站排行榜</p>
+                        </a>
+                    </div>
+                    
+                    <div class="mb-8 hover-scale" data-scroll-reveal="" data-delay="400">
+                        <a href="https://www.douyin.com/user/MS4wLjABAAAA4n6x0g6CzQGodWO5ShMTdlU7R7-q0nMzelsrik7YlLA?from_tab_name=main" target="_blank" class="block">
+                            <div class="relative overflow-hidden aspect-[4/5] hover-info">
+                                <img src="assets/work3.jpg" alt="《奇幻世界》开发者日志" class="w-full h-full object-cover">
+                                <div class="hover-info-content">
+                                    <p class="text-sm text-gray-300">PUBG抖音官号运营</p>
+                                </div>
+                            </div>
+                            <h3 class="mt-3 text-lg">PUBG抖音官号运营</h3>
+                            <p class="text-sm text-gray-400">现象级游戏吃鸡，多年官号运营经验。爆款无数、播放量上亿。</p>
+                        </a>
+                    </div>
+                    
+                    <div class="mb-8 hover-scale" data-scroll-reveal="" data-delay="500">
+                        <a href="https://www.bilibili.com/video/BV1Gqs6z2E1o/?spm_id_from=333.1387.homepage.video_card.click&vd_source=936a267e6bf1a74a2ced1dc6d46c238e" target="_blank" class="block">
+                            <div class="relative overflow-hidden aspect-[4/5] hover-info">
+                                <img src="assets/work4.jpg" alt="《极速漂移》实机演示" class="w-full h-full object-cover">
+                                <div class="hover-info-content">
+                                    <p class="text-sm text-gray-300">王者荣耀世界PV</p>
+                                </div>
+                            </div>
+                            <h3 class="mt-3 text-lg">王者荣耀世界PV</h3>
+                            <p class="text-sm text-gray-400">腾讯重点项目驻场经历，搭建引擎动画团队，输出高品质引擎动画</p>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-16" data-scroll-reveal="" data-delay="600">
+                    <a href="#" class="btn">更多作品，欢迎面议</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Hobbies Section -->
+    <section id="hobbies" class="section bg-black relative z-10">
+        <div class="container mx-auto px-6 py-24">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-5xl font-light mb-16" data-scroll-reveal="">个人兴趣</h2>
+                
+                <div class="space-y-8" data-scroll-reveal="" data-delay="200">
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center border border-gray-700 rounded-full mr-4 flex-shrink-0">
+                            <i class="fa fa-gamepad text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-light mb-1">游戏</h4>
+                            <p class="text-gray-400">游戏已是我人生中不可或缺的一部分，因为游戏我找了人生中第一份热爱的工作，因为游戏认识了许许多多真切的伙伴。在我心中，游戏是真正的艺术。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center border border-gray-700 rounded-full mr-4 flex-shrink-0">
+                            <i class="fa fa-music text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-light mb-1">音乐</h4>
+                            <p class="text-gray-400">音乐是我创作灵感的重要来源，系统性的学习过流行歌唱，唱歌音乐这件事对于我来说是打开我灵感源泉的开关，是灌溉我心灵的药水。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center border border-gray-700 rounded-full mr-4 flex-shrink-0">
+                            <i class="fa fa-cutlery text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-light mb-1">美食</h4>
+                            <p class="text-gray-400">因为料理这件事，我曾搬出了父母家，就为了能有自己的厨房料理一手好菜。作为一个上海男人，买汏烧是刻在基因里的。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center border border-gray-700 rounded-full mr-4 flex-shrink-0">
+                            <i class="fa fa-film text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-light mb-1">影视</h4>
+                            <p class="text-gray-400">从动漫到综艺，电视剧到电影。纪录、文艺、歌舞、科幻、犯罪、情景等等等没有我不看的，只有我来不及看。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center border border-gray-700 rounded-full mr-4 flex-shrink-0">
+                            <i class="fa fa-compass text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-light mb-1">思维求生</h4>
+                            <p class="text-gray-400">典型的怕死客，王者级纸上谈兵。BOB背包PSK、EDC各种装备党，理论知识满分，实操经验为零。纯粹的享受，在脑海求生的臆想爱好者。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center border border-gray-700 rounded-full mr-4 flex-shrink-0">
+                            <i class="fa fa-futbol-o text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-light mb-1">足球</h4>
+                            <p class="text-gray-400">足球比赛忠实观众，每周必看五大联赛。虽只有看了三年球，但是已经是我每周末雷打不动的日程了。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="text-3xl md:text-5xl font-light mb-16 mt-24" data-scroll-reveal="">梦想目标</h2>
+                
+                <div class="space-y-8" data-scroll-reveal="" data-delay="200">
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center border border-gray-700 rounded-full mr-4 flex-shrink-0">
+                            <i class="fa fa-youtube-play text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-light mb-1">50岁做一个UP主</h4>
+                            <p class="text-gray-400">我的梦想是50岁的时候做一个游戏UP主。在行业里待了这么多年，深知人设和赛道的重要性。年轻人是卷不过了，到时候和老头卷一卷。趁年轻现在多学一些东西，现在积累的一切都是未来降维打击年轻人的资本。（偷笑）</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- AI Learning Section -->
+    <section id="ai" class="section bg-black relative z-10">
+        <div class="container mx-auto px-6 py-24">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-5xl font-light mb-16" data-scroll-reveal="">AI学习之旅</h2>
+                
+                <div class="bg-black border border-gray-800 p-8 md:p-12" data-scroll-reveal="" data-delay="200">
+                    <div class="mb-8 inline-block px-4 py-2 border border-gray-700">
+                        <span class="text-sm text-gray-300">持续学习中</span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-light mb-8" data-scroll-reveal="" data-delay="300">个人学习信</h3>
+                    
+                    <div class="space-y-6 text-gray-400" data-scroll-reveal="" data-delay="400">
+                        <p class="leading-relaxed char-reveal">
+                            亲爱的朋友，你好。
+                        </p>
+                        
+                        <p class="leading-relaxed char-reveal">
+                            曾经有一阵风吹来的时候，我没有珍惜。等到这阵叫做短视频的风让无数头猪被吹到天上飞的时候，我也没有后悔莫及。如今的我，不似年少无知时那般觉得这风过了就过了。如今我见过了风，感受过了风，知道了什么是风。
+                        </p>
+                        
+                        <p class="leading-relaxed char-reveal">
+                            当 GPT 问世的时候，我看到了地上的沙被微风吹动。当 SD、MJ 像流行的玩具出现时，嗯，也不过如此。这风啊，吹在世人的身上，带来了一丝凉爽的快意。当 DeepSeek 带着中国人的智慧给世界一记重拳的时候，我相信这风要来了，只是它什么时候来呢？
+                        </p>
+                        
+                        <p class="leading-relaxed char-reveal">
+                            2025 年 11 月，我像往常一样打开 B 站，刷到了《AI 可以取代我，那我的意义是？》。看完，我震惊许久。那时，我仿佛化身曹操，站在船上看着吹来的风，已然席卷了整个赤壁。噢，原来…… 它已经来了……
+                        </p>
+                        
+                        <p class="leading-relaxed char-reveal text-white text-xl">
+                            扬 ——！帆 ——！启 ——！航 ——！
+                        </p>
+                        
+                        <p class="leading-relaxed char-reveal">
+                            整个 11 月，我梳理了 AI 目前的发展进度，上手了 ComfyUI，玩转了一些开源的大模型。12 月，我很快就把 AI 带入了工作。当它能作为生产力工具应用到工作中的时候，我才意识到自己已经落下了很多。
+                        </p>
+                        
+                        <p class="leading-relaxed char-reveal">
+                            今年 1 月，我正式离开了工作了 8 年的公司，开启了自己的 AI 简历计划。一份普通的简历，不可能满足我对自己的要求。我希望能用 AI 的能力，做一份特殊的简历。
+                        </p>
+                        
+                        <p class="leading-relaxed char-reveal">
+                            直到有一天我了解到了 AI 编程，一个疯狂的想法便席卷了我每晚躺在床上睡前的幻想时刻 —— 那不如做一个游戏吧？做一集动画吧？我也不知道这个想法对于一个零计算机编程基础的我来说，是不是天方夜谭。但这次，我选择了相信 AI。而这份相信，也让我对 AI 有了全新的认识与突破。
+                        </p>
+                        
+                        <p class="leading-relaxed char-reveal">
+                            如果问我最喜欢的 IP 是什么，我会坚定地回答：《瑞克和莫蒂》这部剧。既然如此，便一拍即合。接下来，就让我带你来看一集我自己制作的互动式动画。希望你能喜欢。
+                        </p>
+                        
+                        <div class="mt-12 mb-12 text-center" data-scroll-reveal="" data-delay="500">
+                            <button id="aiProjectBtn" class="btn">探索我的AI项目</button>
+                        </div>
+                        
+                        <p class="leading-relaxed char-reveal text-gray-300 text-sm mt-8">
+                            PS：目前你所看到的简历的每一部分，基本都有 AI 参与的身影 —— 除了这份信。一开始我想着最后让 AI 润色一下，但是我认为，保留一部分完全属于我自己的真实想法和表达，很重要。
+                        </p>
+                        
+                        <p class="leading-relaxed char-reveal text-gray-300 text-sm">
+                            至此，感谢你百忙之中阅读我的简历。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-black py-16 relative z-10">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-light mb-8" data-scroll-reveal="">联系我</h2>
+                
+                <div class="flex flex-wrap gap-8 mb-16" data-scroll-reveal="" data-delay="200">
+                    <a href="mailto:376763335@qq.com" class="hover:text-gray-400 transition-colors duration-300"><i class="fa fa-qq mr-2"></i>邮箱：376763335@qq.com</a>
+                    <a href="#" class="hover:text-gray-400 transition-colors duration-300"><i class="fa fa-weixin mr-2"></i>微信/手机：18917135403</a>
+                </div>
+                
+
+                
+                <div class="border-t border-gray-800 pt-8 text-center text-gray-600" data-scroll-reveal="" data-delay="400">
+                    <p>© 2025 PU YI. 保留所有权利。</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Initialize all animations and effects when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Typing Effect
+            const typingEffect = (element, words, typingSpeed = 100, pauseTime = 1000) => {
+                let wordIndex = 0;
+                let charIndex = 0;
+                let isDeleting = false;
+              
+                function type() {
+                    const currentWord = words[wordIndex];
+                  
+                    if (isDeleting) {
+                        // Delete characters
+                        element.textContent = currentWord.substring(0, charIndex - 1);
+                        charIndex--;
+                    } else {
+                        // Add characters
+                        element.textContent = currentWord.substring(0, charIndex + 1);
+                        charIndex++;
+                    }
+                  
+                    // Handle state transitions
+                    if (!isDeleting && charIndex === currentWord.length) {
+                        isDeleting = true;
+                        setTimeout(type, pauseTime); // Pause after completing a word
+                    } else if (isDeleting && charIndex === 0) {
+                        isDeleting = false;
+                        wordIndex = (wordIndex + 1) % words.length; // Cycle through words
+                        setTimeout(type, 200); // Brief pause before starting new word
+                    } else {
+                        // Continue current operation
+                        setTimeout(type, isDeleting ? typingSpeed/2 : typingSpeed);
+                    }
+                }
+              
+                type(); // Start the animation
+            };
+
+            // Initialize typing effect
+            typingEffect(
+                document.getElementById('typing-text'),
+                ['游戏UP主', '制片人', '创意大师', '剪辑后期', 'AI探索者'],
+                80, 
+                1000
+            );
+            
+
+            
+            // Parallax Scroll Effect
+            const parallaxEffect = () => {
+                const background = document.getElementById('parallax-bg');
+                const maxBlur = 15;
+                const minScale = 0.6;
+              
+                window.addEventListener('scroll', () => {
+                    // Calculate scroll percentage (0-1)
+                    const scrollY = window.scrollY;
+                    const scrollPercent = Math.min(scrollY / window.innerHeight, 1);
+                  
+                    // Apply blur and scale effects
+                    const currentBlur = scrollPercent * maxBlur;
+                    const currentScale = 1 - (scrollPercent * (1 - minScale));
+                  
+                    background.style.filter = `blur(${currentBlur}px)`;
+                    background.style.transform = `scale(${currentScale})`;
+                });
+            };
+
+            parallaxEffect();
+            
+            // Scroll Reveal Effect
+            const setupScrollReveal = () => {
+                const revealElements = document.querySelectorAll('[data-scroll-reveal]');
+              
+                const revealOnScroll = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const element = entry.target;
+                            const delay = element.getAttribute('data-delay') || 0;
+                          
+                            setTimeout(() => {
+                                element.classList.add('animate-fade-in');
+                              
+                                // For character reveal effect
+                                const charElements = element.querySelectorAll('.char-reveal');
+                                charElements.forEach(charEl => {
+                                    const text = charEl.textContent;
+                                    charEl.textContent = '';
+                                  
+                                    // Split text into individual characters and show one by one
+                                    for (let i = 0; i < text.length; i++) {
+                                        const span = document.createElement('span');
+                                        span.textContent = text[i];
+                                        span.style.opacity = '0';
+                                        span.style.filter = 'blur(4px)';
+                                        span.style.transition = 'all 0.3s';
+                                        span.style.transitionDelay = `${i * 30}ms`;
+                                        charEl.appendChild(span);
+                                      
+                                        // Force reflow before adding animation
+                                        setTimeout(() => {
+                                            span.style.opacity = '1';
+                                            span.style.filter = 'blur(0)';
+                                        }, 10);
+                                    }
+                                });
+                            }, delay);
+                          
+                            // Only trigger once
+                            revealOnScroll.unobserve(element);
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -100px 0px'
+                });
+              
+                revealElements.forEach(element => {
+                    revealOnScroll.observe(element);
+                    element.style.opacity = '0';
+                });
+            };
+
+            setupScrollReveal();
+            
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+            
+            // AI Project Button Event Handler
+            const aiProjectBtn = document.getElementById('aiProjectBtn');
+            if (aiProjectBtn) {
+                aiProjectBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 添加点击动画效果
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                    
+                    // 延迟跳转，让用户看到点击效果
+                    setTimeout(() => {
+                        // 在新窗口中打开游戏页面
+                        window.open('game.html', '_blank', 'noopener,noreferrer');
+                    }, 200);
+                });
+            }
+        });
+    </script>
+
+</body></html>
