@@ -1915,16 +1915,67 @@ document.addEventListener('DOMContentLoaded', function() {
         // 第四幕对话状态
         let chapter4CurrentPhase = 'desktop'; // desktop -> projects -> browser -> recycle -> recipe
         let chapter4DialogIndex = 0;
+        let chapter4DialogHistory = []; // 添加对话历史记录
         
         // 开始第四幕桌面对话
         function startChapter4DesktopDialog() {
             chapter4CurrentPhase = 'desktop';
             chapter4DialogIndex = 0;
+            chapter4DialogHistory = []; // 重置历史记录
             
             const dialogBox = document.getElementById('chapter4-dialog-box');
             dialogBox.classList.add('show');
             
+            // 绑定后退和前进按钮事件
+            const backBtn = document.getElementById('back-chapter4-dialog-btn');
+            const forwardBtn = document.getElementById('forward-chapter4-dialog-btn');
+            
+            if (backBtn) {
+                backBtn.addEventListener('click', () => {
+                    if (chapter4DialogIndex > 0) {
+                        chapter4DialogIndex--;
+                        showNextChapter4Dialog();
+                    }
+                });
+            }
+            
+            if (forwardBtn) {
+                forwardBtn.addEventListener('click', () => {
+                    chapter4DialogIndex++;
+                    showNextChapter4Dialog();
+                });
+            }
+            
             setTimeout(showNextChapter4Dialog, 500);
+        }
+        
+        // 更新第四幕对话按钮状态
+        function updateChapter4DialogButtons() {
+            const backBtn = document.getElementById('back-chapter4-dialog-btn');
+            const forwardBtn = document.getElementById('forward-chapter4-dialog-btn');
+            
+            let currentDialogData;
+            switch (chapter4CurrentPhase) {
+                case 'desktop':
+                    currentDialogData = DialogDataChapter4.desktop;
+                    break;
+                case 'projects':
+                    currentDialogData = DialogDataChapter4.projects;
+                    break;
+                case 'browser':
+                    currentDialogData = DialogDataChapter4.browser;
+                    break;
+                default:
+                    return;
+            }
+            
+            if (backBtn) {
+                backBtn.disabled = chapter4DialogIndex <= 0;
+            }
+            
+            if (forwardBtn) {
+                forwardBtn.disabled = chapter4DialogIndex >= currentDialogData.length - 1;
+            }
         }
         
         // 显示第四幕下一段对话
@@ -1980,9 +2031,15 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 检查对话是否结束
             if (chapter4DialogIndex >= currentDialogData.length) {
-                chapter4DialogIndex = 0;
+                chapter4DialogIndex = currentDialogData.length - 1; // 保持在最后一条对话
+                updateChapter4DialogButtons();
                 if (nextAction) nextAction();
                 return;
+            }
+            
+            // 确保索引不小于0
+            if (chapter4DialogIndex < 0) {
+                chapter4DialogIndex = 0;
             }
             
             const dialog = currentDialogData[chapter4DialogIndex];
@@ -2012,11 +2069,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            chapter4DialogIndex++;
+            // 更新按钮状态
+            updateChapter4DialogButtons();
             
-            // 等待用户点击继续
-            await dialogModule.waitForClick(dialogBox);
-            showNextChapter4Dialog();
+            // 如果不是通过按钮触发的，等待用户点击继续
+            if (!dialog.skipWait) {
+                await dialogModule.waitForClick(dialogBox);
+                chapter4DialogIndex++;
+                showNextChapter4Dialog();
+            }
         }
         
         // Projects文件夹点击事件
